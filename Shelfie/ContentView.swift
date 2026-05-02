@@ -15,16 +15,16 @@ struct ContentView: View {
                 
             }
             
-            Tab("Search", systemImage: "magnifyingglass") {
-                
-            }
-            
             Tab("Stats", systemImage: "apple.books.pages.fill") {
                 
             }
             
             Tab("Settings", systemImage: "gear") {
                 
+            }
+            
+            Tab(role: .search) {
+                SearchScreen()
             }
         }
     }
