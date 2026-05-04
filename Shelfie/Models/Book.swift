@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Book: Codable, Identifiable, Equatable {
+struct Book: Codable, Identifiable, Equatable, Hashable {
     let id: String
     let title: String?
     let description: String?
@@ -15,7 +15,7 @@ struct Book: Codable, Identifiable, Equatable {
     let genres: [String]?
     let featuredSeries: FeaturedSeries?
     let releaseYear: Int?
-    let image: Image?
+    let image: RemoteImage?
     let pages: Int?
     let isbns: [String]
     let contentWarnings: [String]?
@@ -40,7 +40,7 @@ struct Book: Codable, Identifiable, Equatable {
     
     static var example: Book {
         let author = Author.example
-        let image = Image.bookExample
+        let image = RemoteImage.bookExample
         let description = "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the “spice” melange, a drug capable of extending life and enhancing consciousness."
         let contributions = [Contribution(author: author, contribution: "")]
         let genres = ["Science Fiction", "Fiction", "Fantasy"]
@@ -51,6 +51,21 @@ struct Book: Codable, Identifiable, Equatable {
         let moods = ["Adventurous", "challenging", "mysterious", "tense", "dark"]
         
         return Book(id: "312460", title: "Dune", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1965, image: image, pages: 704, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 4.31598440545809, ratingsCount: 5130, reviewsCount: 387, usersRead: 6994, featuredSeriesPosition: 1)
+    }
+    
+    static var example2: Book {
+        let author = Author.example
+        let image = RemoteImage.bookExample
+        let description = "Dune Messiah continues the story of Paul Atreides, who has become Emperor of the known universe after leading the Fremen to victory. Now, twelve years later, Paul must face the consequences of his choices as a conspiracy forms against him."
+        let contributions = [Contribution(author: author, contribution: "")]
+        let genres = ["Science Fiction", "Fiction", "Fantasy"]
+        let bookSeries = BookSeries(id: 1150, booksCount: 36, name: "Dune", primaryBooksCount: 6)
+        let featuredSeries = FeaturedSeries(id: 2449, position: 2, unreleased: false, series: bookSeries)
+        let isbns = ["9780441015221", "0441015220", "9780575073777", "0575073772"]
+        let contentWarnings = ["Violence", "Death", "War", "Political intrigue"]
+        let moods = ["Dark", "mysterious", "tense", "philosophical", "melancholic"]
+        
+        return Book(id: "312461", title: "Dune Messiah", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1969, image: image, pages: 226, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 3.98, ratingsCount: 3200, reviewsCount: 241, usersRead: 4500, featuredSeriesPosition: 2)
     }
 }
 

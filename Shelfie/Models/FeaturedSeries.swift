@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FeaturedSeries: Codable, Identifiable, Equatable {
+struct FeaturedSeries: Codable, Identifiable, Equatable, Hashable {
     let id: Int?
     let position: Int?
     let unreleased: Bool?

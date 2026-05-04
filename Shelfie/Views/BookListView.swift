@@ -13,7 +13,12 @@ struct BookListView: View {
     
     var body: some View {
         List(books) { book in
-            BookRow(book: book)
+            NavigationLink(value: book) {
+                BookRow(book: book)
+            }
+        }
+        .navigationDestination(for: Book.self) { book in
+            BookDetailScreen(book: book)
         }
     }
 }

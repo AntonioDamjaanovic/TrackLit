@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Contribution: Codable, Equatable {
+struct Contribution: Codable, Equatable, Hashable {
     let author: Author
     let contribution: String?
 }

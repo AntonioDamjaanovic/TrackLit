@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct Author: Codable, Identifiable, Equatable {
+struct Author: Codable, Identifiable, Equatable, Hashable {
     let id: Int
     let name: String
     //let bio: String
     //let bornDate: String
     //let deathDate: String
     //let gender: Int
-    let image: Image?
+    let image: RemoteImage?
     
     //enum CodingKeys: String, CodingKey {
     //    case id, name, bio
@@ -26,7 +26,7 @@ struct Author: Codable, Identifiable, Equatable {
     //}
     
     static var example: Author {
-        let image = Image.authorExample
+        let image = RemoteImage.authorExample
         return Author(id: 11, name: "Frank Herbert", image: image)
     }
 }
