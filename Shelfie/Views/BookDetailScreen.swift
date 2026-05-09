@@ -42,9 +42,6 @@ struct BookDetailScreen: View {
                 BooksByAuthorView(books: [.example, .example2])
             }
         }
-        .sheet(isPresented: $viewModel.showingShelfForm) {
-            
-        }
     }
 }
 
@@ -86,8 +83,12 @@ private struct BookRatingView: View {
     
     let book: Book
     let viewModel: BookDetailViewModel
+    
     @State private var selectedShelf: ShelfState = .notOnShelf
     @State private var selectedStars: Int = 0
+    @State private var isLoadingShelf: Bool = false
+    @State private var showError: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
         VStack(spacing: 16) {
@@ -102,6 +103,12 @@ private struct BookRatingView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                .disabled(viewModel.state == .loading)
+                .alert("Error", isPresented: $showError) {
+                    Button("OK") { showError = false }
+                } message: {
+                    Text(errorMessage)
+                }
             }
             
             HStack {
@@ -113,6 +120,24 @@ private struct BookRatingView: View {
             }
         }
         .padding(.horizontal)
+        .onAppear {
+            Task {
+                isLoadingShelf = true
+                selectedShelf = await viewModel.fetchShelfState(bookId: book.id) ?? .notOnShelf
+                isLoadingShelf = false
+            }
+        }
+        .onChange(of: selectedShelf) {
+            if !isLoadingShelf {
+                viewModel.saveToShelf(to: selectedShelf, book: book)
+            }
+        }
+        .onChange(of: viewModel.state) {
+            if case .error(let message) = viewModel.state {
+                errorMessage = message
+                showError = true
+            }
+        }
     }
 }
 

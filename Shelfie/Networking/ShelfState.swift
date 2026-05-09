@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum ShelfState: Equatable, CaseIterable, Identifiable {
-    case notOnShelf
-    case wantToRead
-    case currentlyReading
-    case read
-    case didNotFinish
+enum ShelfState: String, Equatable, CaseIterable, Identifiable {
+    case notOnShelf = "notOnShelf"
+    case wantToRead = "wantToRead"
+    case currentlyReading = "currentlyReading"
+    case read = "read"
+    case didNotFinish = "didNotFinish"
     var id: Self { self }
     
     var displayName: String {

@@ -129,4 +129,5 @@ iOSInjectionProject/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 ## User files
-Config.plist
+Shelfie/Other/Config.plist
+Shelfie/Other/GoogleService-Info.plist

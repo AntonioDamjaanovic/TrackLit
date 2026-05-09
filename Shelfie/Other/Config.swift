@@ -8,16 +8,6 @@
 import Foundation
 
 enum Config {
-    static var googleBooksAPIKey: String {
-        guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
-              let dict = NSDictionary(contentsOfFile: path),
-              let key = dict["GoogleBooksAPIKey"] as? String else {
-            fatalError("Config.plist missing or GoogleBooksAPIKey not found")
-        }
-        
-        return key
-    }
-    
     static var hardcoverAPIKey: String {
         guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
               let dict = NSDictionary(contentsOfFile: path),
