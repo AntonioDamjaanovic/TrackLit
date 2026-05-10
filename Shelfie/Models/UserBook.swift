@@ -12,11 +12,13 @@ struct UserBook: Codable, Identifiable, Equatable, Hashable {
     let title: String?
     let image: RemoteImage?
     let shelf: String
+    let rating: Int
     
-    init(book: Book, shelf: ShelfState) {
+    init(book: Book, shelf: ShelfState, rating: Int) {
         self.id = book.id
         self.title = book.title
         self.image = book.image
         self.shelf = shelf.rawValue
+        self.rating = rating
     }
 }

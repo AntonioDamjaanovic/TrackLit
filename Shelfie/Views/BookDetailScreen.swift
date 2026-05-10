@@ -85,8 +85,7 @@ private struct BookRatingView: View {
     let viewModel: BookDetailViewModel
     
     @State private var selectedShelf: ShelfState = .notOnShelf
-    @State private var selectedStars: Int = 0
-    @State private var isLoadingShelf: Bool = false
+    @State private var selectedRating: Int = 0
     @State private var showError: Bool = false
     @State private var errorMessage: String = ""
     
@@ -97,7 +96,14 @@ private struct BookRatingView: View {
                 
                 Spacer()
                 
-                Picker("On which shelf", selection: $selectedShelf) {
+                Picker("On which shelf", selection: Binding(
+                    get: { selectedShelf },
+                    set: { newShelf in
+                        selectedShelf = newShelf
+                        if newShelf == .notOnShelf { selectedRating = 0 }
+                        viewModel.saveToShelf(to: newShelf, book: book, rating: selectedRating)
+                    }
+                )) {
                     ForEach(ShelfState.allCases) { shelf in
                         Text(shelf.displayName)
                     }
@@ -116,20 +122,23 @@ private struct BookRatingView: View {
                 
                 Spacer()
                 
-                StarRatingView(rating: 0)
+                InteractiveStarRatingView(rating: Binding(
+                    get: { selectedRating },
+                    set: { newRating in
+                        selectedRating = newRating
+                        viewModel.updateBookRating(bookId: book.id, rating: newRating)
+                    }
+                ))
+                .disabled(viewModel.state == .loading || viewModel.state.data == .notOnShelf)
             }
         }
         .padding(.horizontal)
         .onAppear {
             Task {
-                isLoadingShelf = true
-                selectedShelf = await viewModel.fetchShelfState(bookId: book.id) ?? .notOnShelf
-                isLoadingShelf = false
-            }
-        }
-        .onChange(of: selectedShelf) {
-            if !isLoadingShelf {
-                viewModel.saveToShelf(to: selectedShelf, book: book)
+                if let userBookState = await viewModel.fetchUserBookState(bookId: book.id) {
+                    selectedShelf = userBookState.shelf
+                    selectedRating = userBookState.rating
+                }
             }
         }
         .onChange(of: viewModel.state) {
