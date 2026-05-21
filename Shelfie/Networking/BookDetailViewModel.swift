@@ -59,7 +59,7 @@ class BookDetailViewModel {
                 if shelf == .notOnShelf {
                     try await bookRef.delete()
                 } else {
-                    try await bookRef.setData(UserBook(book: book, shelf: shelf, rating: rating).asDictionary())
+                    try await bookRef.setData(UserBook(book: book, shelf: shelf, rating: Double(rating)).asDictionary())
                 }
                 
                 self.state = .loaded(shelf)

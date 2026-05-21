@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ShelfState: String, Equatable, CaseIterable, Identifiable {
+enum ShelfState: String, Equatable, CaseIterable, Identifiable, Codable {
     case notOnShelf = "notOnShelf"
     case wantToRead = "wantToRead"
     case currentlyReading = "currentlyReading"

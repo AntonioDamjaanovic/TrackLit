@@ -28,7 +28,7 @@ struct SearchScreen: View {
                         ProgressView()
                         
                     case .loaded(let books):
-                        BookListView(books: books)
+                        BookListView(books: books, title: "Results")
                         
                     case .error(let error):
                         Text(error)

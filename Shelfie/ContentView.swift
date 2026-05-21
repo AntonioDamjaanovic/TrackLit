@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     
+    private var viewModel = MyBooksViewModel()
+    
     var body: some View {
         TabView {
-            Tab("Shelf", systemImage: "books.vertical.fill") {
-                
+            Tab("My Books", systemImage: "books.vertical.fill") {
+                MyBooksScreen(viewModel: viewModel)
             }
             
             Tab("Stats", systemImage: "apple.books.pages.fill") {

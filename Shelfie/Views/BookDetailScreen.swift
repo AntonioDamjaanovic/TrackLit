@@ -42,6 +42,9 @@ struct BookDetailScreen: View {
                 BooksByAuthorView(books: [.example, .example2])
             }
         }
+        .navigationTitle(book.title ?? "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
     }
 }
 
