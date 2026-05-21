@@ -9,23 +9,32 @@ import SwiftUI
 
 struct BookListView: View {
     
-    let books: [Book]
+    let books: [any BookRepresentable]
+    let title: String
     
     var body: some View {
-        List(books) { book in
-            NavigationLink(value: book) {
-                BookRow(book: book)
+        List {
+            ForEach(books, id: \.id) { book in
+                NavigationLink(value: book) {
+                    BookRow(book: book)
+                }
             }
         }
         .navigationDestination(for: Book.self) { book in
             BookDetailScreen(book: book)
         }
+        .navigationDestination(for: UserBook.self) { book in
+            // TODO: implement Book fetch from API
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
     }
 }
 
 private struct BookRow: View {
     
-    let book: Book
+    let book: any BookRepresentable
     
     var body: some View {
         HStack(alignment: .top) {
@@ -48,5 +57,7 @@ private struct BookRow: View {
 }
 
 #Preview {
-    BookListView(books: [Book.example, Book.example, Book.example])
+    NavigationStack {
+        BookListView(books: [Book.example, Book.example, Book.example], title: "Books")
+    }
 }

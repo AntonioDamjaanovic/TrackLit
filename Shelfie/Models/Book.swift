@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Book: Codable, Identifiable, Equatable, Hashable {
+struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
     let id: String
     let title: String?
     let description: String?
