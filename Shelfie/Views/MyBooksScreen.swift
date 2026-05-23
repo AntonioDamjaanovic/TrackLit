@@ -15,68 +15,36 @@ struct MyBooksScreen: View {
         NavigationStack {
             List {
                 Section {
-                    NavigationLink {
-                        BookListView(
-                            books: viewModel.currentlyReading,
-                            title: ShelfState.currentlyReading.displayName,
-                            selectedBook: $viewModel.selectedBook,
-                            onUserBookTapped: { userBook in
-                                try? await viewModel.fetchSelectedBook(by: userBook.id)
-                                return viewModel.selectedBook
-                            }
-                        )
-                    } label: {
+                    NavigationLink(value: ShelfDestination.shelf(.currentlyReading)) {
                         ShelfView(books: viewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
                     }
                 }
                 
                 Section {
-                    NavigationLink {
-                        BookListView(
-                            books: viewModel.wantToRead,
-                            title: ShelfState.wantToRead.displayName,
-                            selectedBook: $viewModel.selectedBook,
-                            onUserBookTapped: { userBook in
-                                try? await viewModel.fetchSelectedBook(by: userBook.id)
-                                return viewModel.selectedBook
-                            }
-                        )
-                    } label: {
+                    NavigationLink(value: ShelfDestination.shelf(.wantToRead)) {
                         ShelfView(books: viewModel.wantToRead, title: ShelfState.wantToRead.displayName)
                     }
                 }
                 
                 Section {
-                    NavigationLink {
-                        BookListView(
-                            books: viewModel.read,
-                            title: ShelfState.read.displayName,
-                            selectedBook: $viewModel.selectedBook,
-                            onUserBookTapped: { userBook in
-                                try? await viewModel.fetchSelectedBook(by: userBook.id)
-                                return viewModel.selectedBook
-                            }
-                        )
-                    } label: {
+                    NavigationLink(value: ShelfDestination.shelf(.read)) {
                         ShelfView(books: viewModel.read, title: ShelfState.read.displayName)
                     }
                 }
                 
                 Section {
-                    NavigationLink {
-                        BookListView(
-                            books: viewModel.didNotFinish,
-                            title: ShelfState.didNotFinish.displayName,
-                            selectedBook: $viewModel.selectedBook,
-                            onUserBookTapped: { userBook in
-                                try? await viewModel.fetchSelectedBook(by: userBook.id)
-                                return viewModel.selectedBook
-                            }
-                        )
-                    } label: {
+                    NavigationLink(value: ShelfDestination.shelf(.didNotFinish)) {
                         ShelfView(books: viewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
                     }
                 }
+            }
+            .navigationDestination(for: ShelfDestination.self) { destination in
+                if case .shelf(let shelf) = destination {
+                    BookListView(books: viewModel.books(for: shelf), title: shelf.displayName)
+                }
+            }
+            .navigationDestination(for: Book.self) { book in
+                BookDetailScreen(book: book)
             }
             .navigationTitle("My Books")
             .listSectionSpacing(14)
@@ -91,7 +59,7 @@ struct MyBooksScreen: View {
 
 private struct ShelfView: View {
     
-    let books: [any BookRepresentable]
+    let books: [Book]
     let title: String
     
     var body: some View {
@@ -108,6 +76,10 @@ private struct ShelfView: View {
             }
         }
     }
+}
+
+private enum ShelfDestination: Hashable {
+    case shelf(ShelfState)
 }
 
 #Preview("My Books Screen") {

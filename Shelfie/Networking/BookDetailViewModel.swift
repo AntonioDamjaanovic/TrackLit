@@ -29,7 +29,7 @@ class BookDetailViewModel {
                 .document(bookId)
                 .getDocument()
             
-            let rating = document.get("rating") as? Int ?? 0
+            let rating = document.get("userRating") as? Int ?? 0
             
             let shelfString = document.get("shelf") as? String
             let shelfState = ShelfState(rawValue: shelfString ?? "notOnShelf") ?? .notOnShelf
@@ -59,7 +59,8 @@ class BookDetailViewModel {
                 if shelf == .notOnShelf {
                     try await bookRef.delete()
                 } else {
-                    try await bookRef.setData(UserBook(book: book, shelf: shelf, rating: Double(rating)).asDictionary())
+                    let updatedBook = book.with(userRating: rating, shelf: shelf)
+                    try await bookRef.setData(updatedBook.asDictionary())
                 }
                 
                 self.state = .loaded(shelf)
@@ -82,7 +83,7 @@ class BookDetailViewModel {
                     .document("UJtzihxBn0wFLWAj4MI9")
                     .collection("books")
                     .document(bookId)
-                    .updateData(["rating": rating])
+                    .updateData(["userRating": rating])
                 
             } catch is CancellationError {
                 // intentionally cancelled, do nothing

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
+struct Book: Codable, Identifiable, Equatable, Hashable {
     let id: String
     let title: String?
     let description: String?
@@ -17,7 +17,7 @@ struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
     let releaseYear: Int?
     let image: RemoteImage?
     let pages: Int?
-    let isbns: [String]
+    let isbns: [String]?
     let contentWarnings: [String]?
     let moods: [String]?
     let rating: Double?
@@ -25,9 +25,11 @@ struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
     let reviewsCount: Int?
     let usersRead: Int?
     let featuredSeriesPosition: Int?
+    let userRating: Int?
+    let shelf: ShelfState?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, contributions, pages, description, genres, image, rating, isbns, moods
+        case id, title, contributions, pages, description, genres, image, rating, isbns, moods, userRating, shelf
         
         case releaseYear = "release_year"
         case contentWarnings = "content_warnings"
@@ -50,7 +52,7 @@ struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
         let contentWarnings = ["Violence", "Death", "Death of parent", "War"]
         let moods = ["Adventurous", "challenging", "mysterious", "tense", "dark"]
         
-        return Book(id: "312460", title: "Dune", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1965, image: image, pages: 704, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 4.31598440545809, ratingsCount: 5130, reviewsCount: 387, usersRead: 6994, featuredSeriesPosition: 1)
+        return Book(id: "312460", title: "Dune", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1965, image: image, pages: 704, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 4.31598440545809, ratingsCount: 5130, reviewsCount: 387, usersRead: 6994, featuredSeriesPosition: 1, userRating: 0, shelf: .notOnShelf)
     }
     
     static var example2: Book {
@@ -65,9 +67,10 @@ struct Book: Codable, Identifiable, Equatable, Hashable, BookRepresentable {
         let contentWarnings = ["Violence", "Death", "War", "Political intrigue"]
         let moods = ["Dark", "mysterious", "tense", "philosophical", "melancholic"]
         
-        return Book(id: "312461", title: "Dune Messiah", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1969, image: image, pages: 226, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 3.98, ratingsCount: 3200, reviewsCount: 241, usersRead: 4500, featuredSeriesPosition: 2)
+        return Book(id: "312461", title: "Dune Messiah", description: description, contributions: contributions, genres: genres, featuredSeries: featuredSeries, releaseYear: 1969, image: image, pages: 226, isbns: isbns, contentWarnings: contentWarnings, moods: moods, rating: 3.98, ratingsCount: 3200, reviewsCount: 241, usersRead: 4500, featuredSeriesPosition: 2, userRating: 0, shelf: .notOnShelf)
     }
 }
+
 
 import Playgrounds
 

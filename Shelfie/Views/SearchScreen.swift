@@ -35,6 +35,9 @@ struct SearchScreen: View {
                             .foregroundStyle(.pink)
                 }
             }
+            .navigationDestination(for: Book.self) { book in
+                BookDetailScreen(book: book)
+            }
             .navigationTitle("Search Books")
             .searchable(text: $text)
             .task(id: text) {

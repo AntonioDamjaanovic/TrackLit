@@ -12,33 +12,14 @@ import FirebaseFirestore
 @Observable
 class MyBooksViewModel {
     
-    var state: LoadingState<[UserBook]> = .idle
-    var selectedBook: Book? = nil
+    var state: LoadingState<[Book]> = .idle
     
-    var wantToRead: [UserBook] = []
-    var read: [UserBook] = []
-    var currentlyReading: [UserBook] = []
-    var didNotFinish: [UserBook] = []
+    var wantToRead: [Book] = []
+    var read: [Book] = []
+    var currentlyReading: [Book] = []
+    var didNotFinish: [Book] = []
     
     private let db = Firestore.firestore()
-    private let service: HardcoverService
-    
-    init(service: HardcoverService = DefaultHardcoverService()) {
-        self.service = service
-    }
-    
-    func fetchSelectedBook(by id: String) async throws {
-        self.state = .loading
-        
-        do {
-            let book = try await service.fetchBook(by: id)
-            self.selectedBook = book
-            print("Fetch succesfull")
-        } catch {
-            self.state = .error(error.localizedDescription)
-            print("Fetch failed")
-        }
-    }
     
     func fetchUserBooks() async {
         self.state = .loading
@@ -50,7 +31,7 @@ class MyBooksViewModel {
                 .getDocuments()
             
             let books = try bookDocuments.documents.compactMap { document in
-                try document.data(as: UserBook.self)
+                try document.data(as: Book.self)
             }
             
             filterBooksByShelf(books: books)
@@ -62,10 +43,20 @@ class MyBooksViewModel {
         }
     }
     
-    private func filterBooksByShelf(books: [UserBook]) {
+    private func filterBooksByShelf(books: [Book]) {
         self.wantToRead = books.filter { $0.shelf == .wantToRead }
         self.read = books.filter { $0.shelf == .read }
         self.currentlyReading = books.filter { $0.shelf == .currentlyReading }
         self.didNotFinish = books.filter { $0.shelf == .didNotFinish }
+    }
+    
+    func books(for shelf: ShelfState) -> [Book] {
+        switch shelf {
+            case .wantToRead: return wantToRead
+            case .read: return read
+            case .currentlyReading: return currentlyReading
+            case .didNotFinish: return didNotFinish
+            case .notOnShelf: return []
+        }
     }
 }

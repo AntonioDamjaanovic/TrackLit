@@ -21,3 +21,29 @@ extension Encodable {
         }
     }
 }
+
+extension Book {
+    func with(userRating: Int, shelf: ShelfState) -> Book {
+        return Book(
+            id: id,
+            title: title,
+            description: description,
+            contributions: contributions,
+            genres: genres,
+            featuredSeries: featuredSeries,
+            releaseYear: releaseYear,
+            image: image,
+            pages: pages,
+            isbns: isbns,
+            contentWarnings: contentWarnings,
+            moods: moods,
+            rating: rating,
+            ratingsCount: ratingsCount,
+            reviewsCount: reviewsCount,
+            usersRead: usersRead,
+            featuredSeriesPosition: featuredSeriesPosition,
+            userRating: userRating,
+            shelf: shelf
+        )
+    }
+}
