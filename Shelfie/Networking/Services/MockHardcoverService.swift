@@ -8,6 +8,11 @@
 import Foundation
 
 struct MockHardcoverService: HardcoverService {
+    
+    func fetchBook(by id: String) async throws -> Book {
+        return Book.example
+    }
+    
     func searchBook(for searchTerm: String) async throws -> [Book] {
         return [Book.example, Book.example]
     }

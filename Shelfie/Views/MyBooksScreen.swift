@@ -9,14 +9,22 @@ import SwiftUI
 
 struct MyBooksScreen: View {
     
-    let viewModel: MyBooksViewModel
+    @State private var viewModel = MyBooksViewModel()
     
     var body: some View {
         NavigationStack {
             List {
                 Section {
                     NavigationLink {
-                        BookListView(books: viewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
+                        BookListView(
+                            books: viewModel.currentlyReading,
+                            title: ShelfState.currentlyReading.displayName,
+                            selectedBook: $viewModel.selectedBook,
+                            onUserBookTapped: { userBook in
+                                try? await viewModel.fetchSelectedBook(by: userBook.id)
+                                return viewModel.selectedBook
+                            }
+                        )
                     } label: {
                         ShelfView(books: viewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
                     }
@@ -24,7 +32,15 @@ struct MyBooksScreen: View {
                 
                 Section {
                     NavigationLink {
-                        BookListView(books: viewModel.wantToRead, title: ShelfState.wantToRead.displayName)
+                        BookListView(
+                            books: viewModel.wantToRead,
+                            title: ShelfState.wantToRead.displayName,
+                            selectedBook: $viewModel.selectedBook,
+                            onUserBookTapped: { userBook in
+                                try? await viewModel.fetchSelectedBook(by: userBook.id)
+                                return viewModel.selectedBook
+                            }
+                        )
                     } label: {
                         ShelfView(books: viewModel.wantToRead, title: ShelfState.wantToRead.displayName)
                     }
@@ -32,7 +48,15 @@ struct MyBooksScreen: View {
                 
                 Section {
                     NavigationLink {
-                        BookListView(books: viewModel.read, title: ShelfState.read.displayName)
+                        BookListView(
+                            books: viewModel.read,
+                            title: ShelfState.read.displayName,
+                            selectedBook: $viewModel.selectedBook,
+                            onUserBookTapped: { userBook in
+                                try? await viewModel.fetchSelectedBook(by: userBook.id)
+                                return viewModel.selectedBook
+                            }
+                        )
                     } label: {
                         ShelfView(books: viewModel.read, title: ShelfState.read.displayName)
                     }
@@ -40,7 +64,15 @@ struct MyBooksScreen: View {
                 
                 Section {
                     NavigationLink {
-                        BookListView(books: viewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
+                        BookListView(
+                            books: viewModel.didNotFinish,
+                            title: ShelfState.didNotFinish.displayName,
+                            selectedBook: $viewModel.selectedBook,
+                            onUserBookTapped: { userBook in
+                                try? await viewModel.fetchSelectedBook(by: userBook.id)
+                                return viewModel.selectedBook
+                            }
+                        )
                     } label: {
                         ShelfView(books: viewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
                     }
@@ -79,7 +111,7 @@ private struct ShelfView: View {
 }
 
 #Preview("My Books Screen") {
-    MyBooksScreen(viewModel: MyBooksViewModel())
+    MyBooksScreen()
 }
 
 #Preview("Shelf View") {

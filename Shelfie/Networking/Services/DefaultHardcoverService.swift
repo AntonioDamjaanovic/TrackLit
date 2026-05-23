@@ -9,6 +9,14 @@ import Foundation
 
 struct DefaultHardcoverService: HardcoverService {
     
+    func fetchBook(by id: String) async throws -> Book {
+        let books = try await searchBook(for: id)
+        guard let book = books.first else {
+            throw APIError.invalidResponse
+        }
+        return book
+    }
+    
     func searchBook(for searchTerm: String) async throws -> [Book] {
         let query = makeSearchQuery(for: searchTerm)
         let request = try buildURLRequest(query: query)

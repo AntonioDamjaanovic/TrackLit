@@ -13,6 +13,7 @@ import FirebaseFirestore
 class MyBooksViewModel {
     
     var state: LoadingState<[UserBook]> = .idle
+    var selectedBook: Book? = nil
     
     var wantToRead: [UserBook] = []
     var read: [UserBook] = []
@@ -20,6 +21,24 @@ class MyBooksViewModel {
     var didNotFinish: [UserBook] = []
     
     private let db = Firestore.firestore()
+    private let service: HardcoverService
+    
+    init(service: HardcoverService = DefaultHardcoverService()) {
+        self.service = service
+    }
+    
+    func fetchSelectedBook(by id: String) async throws {
+        self.state = .loading
+        
+        do {
+            let book = try await service.fetchBook(by: id)
+            self.selectedBook = book
+            print("Fetch succesfull")
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Fetch failed")
+        }
+    }
     
     func fetchUserBooks() async {
         self.state = .loading
