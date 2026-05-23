@@ -12,8 +12,11 @@ struct SearchScreen: View {
     @State private var text: String = ""
     @State private var searchViewModel: SearchViewModel
     
-    init(service: HardcoverService = DefaultHardcoverService()) {
+    let myBooksViewModel: MyBooksViewModel
+    
+    init(service: HardcoverService = DefaultHardcoverService(), myBooksViewModel: MyBooksViewModel) {
         self.searchViewModel = SearchViewModel(service: service)
+        self.myBooksViewModel = myBooksViewModel
     }
     
     var body: some View {
@@ -28,7 +31,11 @@ struct SearchScreen: View {
                         ProgressView()
                         
                     case .loaded(let books):
-                        BookListView(books: books, title: "Results")
+                        BookListView(
+                            myBooksViewModel: myBooksViewModel,
+                            books: books,
+                            title: "Results"
+                        )
                         
                     case .error(let error):
                         Text(error)
@@ -48,5 +55,5 @@ struct SearchScreen: View {
 }
 
 #Preview {
-    SearchScreen()
+    SearchScreen(myBooksViewModel: MyBooksViewModel())
 }

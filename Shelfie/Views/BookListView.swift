@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BookListView: View {
     
+    let myBooksViewModel: MyBooksViewModel
     let books: [Book]
     let title: String
     
@@ -23,6 +24,11 @@ struct BookListView: View {
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+        .onAppear {
+            Task {
+                await myBooksViewModel.fetchUserBooks()
+            }
+        }
     }
 }
 
@@ -59,6 +65,7 @@ private struct BookRow: View {
 #Preview {
     NavigationStack {
         BookListView(
+            myBooksViewModel: MyBooksViewModel(),
             books: [Book.example, Book.example, Book.example],
             title: "Books"
         )

@@ -9,38 +9,42 @@ import SwiftUI
 
 struct MyBooksScreen: View {
     
-    @State private var viewModel = MyBooksViewModel()
+    let myBooksViewModel: MyBooksViewModel
     
     var body: some View {
         NavigationStack {
             List {
                 Section {
                     NavigationLink(value: ShelfDestination.shelf(.currentlyReading)) {
-                        ShelfView(books: viewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
+                        ShelfView(books: myBooksViewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
                     }
                 }
                 
                 Section {
                     NavigationLink(value: ShelfDestination.shelf(.wantToRead)) {
-                        ShelfView(books: viewModel.wantToRead, title: ShelfState.wantToRead.displayName)
+                        ShelfView(books: myBooksViewModel.wantToRead, title: ShelfState.wantToRead.displayName)
                     }
                 }
                 
                 Section {
                     NavigationLink(value: ShelfDestination.shelf(.read)) {
-                        ShelfView(books: viewModel.read, title: ShelfState.read.displayName)
+                        ShelfView(books: myBooksViewModel.read, title: ShelfState.read.displayName)
                     }
                 }
                 
                 Section {
                     NavigationLink(value: ShelfDestination.shelf(.didNotFinish)) {
-                        ShelfView(books: viewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
+                        ShelfView(books: myBooksViewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
                     }
                 }
             }
             .navigationDestination(for: ShelfDestination.self) { destination in
                 if case .shelf(let shelf) = destination {
-                    BookListView(books: viewModel.books(for: shelf), title: shelf.displayName)
+                    BookListView(
+                        myBooksViewModel: myBooksViewModel,
+                        books: myBooksViewModel.books(for: shelf),
+                        title: shelf.displayName
+                    )
                 }
             }
             .navigationDestination(for: Book.self) { book in
@@ -51,7 +55,7 @@ struct MyBooksScreen: View {
         }
         .onAppear {
             Task {
-                await viewModel.fetchUserBooks()
+                await myBooksViewModel.fetchUserBooks()
             }
         }
     }
@@ -83,7 +87,7 @@ private enum ShelfDestination: Hashable {
 }
 
 #Preview("My Books Screen") {
-    MyBooksScreen()
+    MyBooksScreen(myBooksViewModel: MyBooksViewModel())
 }
 
 #Preview("Shelf View") {
