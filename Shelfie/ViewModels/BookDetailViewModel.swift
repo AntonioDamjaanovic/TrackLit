@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import FirebaseFirestore
+import FirebaseAuth
 
 @MainActor
 @Observable
@@ -20,11 +21,15 @@ class BookDetailViewModel {
     private var ratingTask: Task<Void, Never>?
     
     func fetchUserBookState(bookId: String) async -> (shelf: ShelfState, rating: Int)? {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return nil
+        }
+        
         self.state = .loading
         
         do {
             let document = try await db.collection("users")
-                .document("UJtzihxBn0wFLWAj4MI9")
+                .document(uid)
                 .collection("books")
                 .document(bookId)
                 .getDocument()
@@ -45,6 +50,10 @@ class BookDetailViewModel {
     }
     
     func saveToShelf(to shelf: ShelfState, book: Book, rating: Int) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
         shelfTask?.cancel()
         
         shelfTask = Task {
@@ -52,7 +61,7 @@ class BookDetailViewModel {
                 self.state = .loading
 
                 let bookRef = db.collection("users")
-                    .document("UJtzihxBn0wFLWAj4MI9")
+                    .document(uid)
                     .collection("books")
                     .document(book.id)
                 
@@ -75,12 +84,16 @@ class BookDetailViewModel {
     }
     
     func updateBookRating(bookId: String, rating: Int) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
         ratingTask?.cancel()
         
         ratingTask = Task {
             do {
                 try await db.collection("users")
-                    .document("UJtzihxBn0wFLWAj4MI9")
+                    .document(uid)
                     .collection("books")
                     .document(bookId)
                     .updateData(["userRating": rating])

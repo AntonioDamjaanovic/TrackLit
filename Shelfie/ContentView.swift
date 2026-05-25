@@ -9,9 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @State private var mainViewModel = MainViewModel()
     @State private var myBooksViewModel = MyBooksViewModel()
     
     var body: some View {
+        if mainViewModel.isSignedIn {
+            appView
+        } else {
+            LoginScreen()
+        }
+    }
+    
+    private var appView: some View {
         TabView {
             Tab("My Books", systemImage: "books.vertical.fill") {
                 MyBooksScreen(myBooksViewModel: myBooksViewModel)

@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import FirebaseFirestore
+import FirebaseAuth
 
 @Observable
 class MyBooksViewModel {
@@ -22,11 +23,16 @@ class MyBooksViewModel {
     private let db = Firestore.firestore()
     
     func fetchUserBooks() async {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
         self.state = .loading
         
         do {
             let bookDocuments = try await db.collection("users")
-                .document("UJtzihxBn0wFLWAj4MI9")
+                .document(uid)
                 .collection("books")
                 .getDocuments()
             

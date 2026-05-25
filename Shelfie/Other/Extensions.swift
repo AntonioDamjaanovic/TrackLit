@@ -6,6 +6,22 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct FilledFieldStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+extension View {
+    func filledField() -> some View {
+        modifier(FilledFieldStyle())
+    }
+}
 
 extension Encodable {
     func asDictionary() -> [String: Any] {
