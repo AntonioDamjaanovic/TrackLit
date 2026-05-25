@@ -9,7 +9,7 @@ import Foundation
 
 struct Author: Codable, Identifiable, Equatable, Hashable {
     let id: Int
-    let name: String
+    let name: String?
     //let bio: String
     //let bornDate: String
     //let deathDate: String

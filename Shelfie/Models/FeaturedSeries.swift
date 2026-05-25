@@ -9,7 +9,7 @@ import Foundation
 
 struct FeaturedSeries: Codable, Identifiable, Equatable, Hashable {
     let id: Int?
-    let position: Int?
+    let position: Double?
     let unreleased: Bool?
     let series: BookSeries?
 }

@@ -24,7 +24,7 @@ struct Book: Codable, Identifiable, Equatable, Hashable {
     let ratingsCount: Int?
     let reviewsCount: Int?
     let usersRead: Int?
-    let featuredSeriesPosition: Int?
+    let featuredSeriesPosition: Double?
     let userRating: Int?
     let shelf: ShelfState?
     
@@ -77,7 +77,7 @@ import Playgrounds
 #Playground {
     let url = URL(string: "https://api.hardcover.app/v1/graphql")!
     
-    let searchTerm = "Dune"
+    let searchTerm = "The Last Wish"
     let body: [String: Any] = [
         "query": "query SearchBooks { search(query: \"\(searchTerm)\", per_page: 10) { results } }"
     ]
@@ -93,9 +93,9 @@ import Playgrounds
     do {
         let (data, response) = try await URLSession.shared.data(for: request)
         
-        //if let jsonString = String(data: data, encoding: .utf8) {
-        //    print(jsonString)
-        //}
+        if let jsonString = String(data: data, encoding: .utf8) {
+            print(jsonString)
+        }
         
         let apiSearchResponse: APISearchResponse = try JSONDecoder().decode(APISearchResponse.self, from: data)
         

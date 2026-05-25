@@ -9,9 +9,9 @@ import Foundation
 
 struct BookSeries: Codable, Identifiable, Equatable, Hashable {
     let id: Int
-    let booksCount: Int
-    let name: String
-    let primaryBooksCount: Int
+    let booksCount: Int?
+    let name: String?
+    let primaryBooksCount: Int?
     
     enum CodingKeys: String, CodingKey {
         case id, name

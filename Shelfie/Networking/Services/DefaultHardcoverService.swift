@@ -55,9 +55,21 @@ struct DefaultHardcoverService: HardcoverService {
     }
     
     private func makeSearchQuery(for searchTerm: String) -> [String: Any] {
-        let query: [String: Any] = [
-            "query": "query SearchBooks { search(query: \"\(searchTerm)\", per_page: 20, sort: \"activities_count:desc\", query_type: \"books\") { results } }"
+        let query = """
+        query SearchBooks($q: String!) {
+          search(
+            query: $q,
+            per_page: 20,
+            sort: "activities_count:desc",
+            query_type: "books"
+          ) {
+            results
+          }
+        }
+        """
+        return [
+            "query": query,
+            "variables": ["q": searchTerm]
         ]
-        return query
     }
 }
