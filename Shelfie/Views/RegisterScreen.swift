@@ -18,6 +18,7 @@ struct RegisterScreen: View {
             submitButton
         }
         .padding()
+        .setAppearanceTheme()
     }
     
     private var header: some View {

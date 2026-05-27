@@ -23,10 +23,7 @@ class MyBooksViewModel {
     private let db = Firestore.firestore()
     
     func fetchUserBooks() async {
-        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
         self.state = .loading
         

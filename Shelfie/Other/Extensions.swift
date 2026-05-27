@@ -8,6 +8,36 @@
 import Foundation
 import SwiftUI
 
+// MARK: - helper to save theme
+struct AppearanceThemeViewModifier: ViewModifier {
+    
+    @AppStorage(UserDefaultsKeys.appearanceTheme)
+    private var appearanceTheme: AppearanceTheme = .system
+    
+    func body(content: Content) -> some View {
+        content
+            .preferredColorScheme(scheme())
+    }
+    
+    func scheme() -> ColorScheme? {
+        switch appearanceTheme {
+            case .system:
+                return nil
+            case .dark:
+                return .dark
+            case .light:
+                return .light
+        }
+    }
+}
+
+extension View {
+    func setAppearanceTheme() -> some View {
+        modifier(AppearanceThemeViewModifier())
+    }
+}
+
+// MARK: - text field style
 struct FilledFieldStyle: ViewModifier {
     func body(content: Content) -> some View {
         content

@@ -31,13 +31,14 @@ struct ContentView: View {
             }
             
             Tab("Settings", systemImage: "gear") {
-                
+                SettingsScreen()
             }
             
             Tab(role: .search) {
                 SearchScreen(myBooksViewModel: myBooksViewModel)
             }
         }
+        .setAppearanceTheme()
     }
 }
 

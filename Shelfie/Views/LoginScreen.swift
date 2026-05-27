@@ -25,6 +25,7 @@ struct LoginScreen: View {
             }
             .padding()
         }
+        .setAppearanceTheme()
     }
     
     private var header: some View {
@@ -32,7 +33,7 @@ struct LoginScreen: View {
             Text("Welcome to Shelfie!")
                 .font(.largeTitle.bold())
             
-            Text("Login to continue your reading journey")
+            Text("Sign in to continue your reading journey")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
@@ -67,7 +68,7 @@ struct LoginScreen: View {
                 ProgressView()
                     .frame(maxWidth: .infinity)
             } else {
-                Text("Login")
+                Text("Sign in")
                     .frame(maxWidth: .infinity)
             }
         }
