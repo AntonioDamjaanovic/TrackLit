@@ -9,8 +9,8 @@ import Foundation
 
 enum ShelfState: String, Equatable, CaseIterable, Identifiable, Codable {
     case notOnShelf = "notOnShelf"
-    case wantToRead = "wantToRead"
     case currentlyReading = "currentlyReading"
+    case wantToRead = "wantToRead"
     case read = "read"
     case didNotFinish = "didNotFinish"
     var id: Self { self }
@@ -19,10 +19,10 @@ enum ShelfState: String, Equatable, CaseIterable, Identifiable, Codable {
         switch self {
             case .notOnShelf:
                 "Not on shelf"
-            case .wantToRead:
-                "Want to read"
             case .currentlyReading:
                 "Currenlty reading"
+            case .wantToRead:
+                "Want to read"
             case .read:
                 "Read"
             case .didNotFinish:

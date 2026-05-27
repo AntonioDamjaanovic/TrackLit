@@ -7,32 +7,27 @@
 
 import SwiftUI
 
-struct BookListView: View {
+struct ShelfBooksListView: View {
     
-    let myBooksViewModel: MyBooksViewModel
-    let books: [Book]
-    let title: String
+    let viewModel: MyBooksViewModel
+    let shelf: ShelfState
     
     var body: some View {
-        List {
-            ForEach(books, id: \.id) { book in
-                NavigationLink(value: book) {
-                    BookRow(book: book)
-                }
+        List(viewModel.books(for: shelf)) { book in
+            NavigationLink(value: book) {
+                BookRow(book: book)
             }
         }
-        .navigationTitle(title)
+        .navigationTitle(shelf.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
-        .onAppear {
-            Task {
-                await myBooksViewModel.fetchUserBooks()
-            }
+        .task {
+            await viewModel.fetchUserBooks()
         }
     }
 }
 
-private struct BookRow: View {
+struct BookRow: View {
     
     let book: Book
     
@@ -64,10 +59,6 @@ private struct BookRow: View {
 
 #Preview {
     NavigationStack {
-        BookListView(
-            myBooksViewModel: MyBooksViewModel(),
-            books: [Book.example, Book.example, Book.example],
-            title: "Books"
-        )
+        ShelfBooksListView(viewModel: MyBooksViewModel(), shelf: .read)
     }
 }

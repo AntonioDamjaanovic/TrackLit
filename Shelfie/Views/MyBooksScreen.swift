@@ -14,37 +14,22 @@ struct MyBooksScreen: View {
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    NavigationLink(value: ShelfDestination.shelf(.currentlyReading)) {
-                        ShelfView(books: myBooksViewModel.currentlyReading, title: ShelfState.currentlyReading.displayName)
-                    }
-                }
-                
-                Section {
-                    NavigationLink(value: ShelfDestination.shelf(.wantToRead)) {
-                        ShelfView(books: myBooksViewModel.wantToRead, title: ShelfState.wantToRead.displayName)
-                    }
-                }
-                
-                Section {
-                    NavigationLink(value: ShelfDestination.shelf(.read)) {
-                        ShelfView(books: myBooksViewModel.read, title: ShelfState.read.displayName)
-                    }
-                }
-                
-                Section {
-                    NavigationLink(value: ShelfDestination.shelf(.didNotFinish)) {
-                        ShelfView(books: myBooksViewModel.didNotFinish, title: ShelfState.didNotFinish.displayName)
+                ForEach(ShelfState.allCases, id: \.self) { shelf in
+                    if shelf != .notOnShelf {
+                        Section {
+                            NavigationLink(value: ShelfDestination.shelf(shelf)) {
+                                ShelfView(
+                                    books: myBooksViewModel.books(for: shelf),
+                                    title: shelf.displayName
+                                )
+                            }
+                        }
                     }
                 }
             }
             .navigationDestination(for: ShelfDestination.self) { destination in
                 if case .shelf(let shelf) = destination {
-                    BookListView(
-                        myBooksViewModel: myBooksViewModel,
-                        books: myBooksViewModel.books(for: shelf),
-                        title: shelf.displayName
-                    )
+                    ShelfBooksListView(viewModel: myBooksViewModel, shelf: shelf)
                 }
             }
             .navigationDestination(for: Book.self) { book in
@@ -52,9 +37,7 @@ struct MyBooksScreen: View {
             }
             .navigationTitle("My Books")
             .listSectionSpacing(14)
-        }
-        .onAppear {
-            Task {
+            .task {
                 await myBooksViewModel.fetchUserBooks()
             }
         }
@@ -68,8 +51,14 @@ private struct ShelfView: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            BookImageView(url: books.first?.image?.url)
-                .frame(width: 80, height: 100)
+            Group {
+                if books.isEmpty {
+                    emptyCover
+                } else {
+                    BookImageView(url: books.first?.image?.url)
+                }
+            }
+            .frame(width: 80, height: 100)
             
             VStack(alignment: .leading) {
                 Text(title)
@@ -79,6 +68,16 @@ private struct ShelfView: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+    
+    private var emptyCover: some View {
+        RoundedRectangle(cornerRadius: 6)
+            .fill(.secondary.opacity(0.15))
+            .overlay(
+                Image(systemName: "books.vertical")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+            )
     }
 }
 

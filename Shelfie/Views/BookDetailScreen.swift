@@ -20,26 +20,21 @@ struct BookDetailScreen: View {
                     .containerRelativeFrame(.horizontal)
                 
                 BookInfoView(book: book)
-                
                 Divider()
                 
                 BookRatingView(book: book, viewModel: viewModel)
-                
                 Divider()
                 
                 BookDescriptionView(description: book.description)
-                
                 Divider()
                 
-                BookGenresView(genres: book.genres)
-                
+                BookTagSection(title: "GENRES", items: book.genres, tagColor: .green)
                 Divider()
                 
-                BookSeriesView(featuredBooks: [.example, .example2])
-                
+                BookTagSection(title: "MOODS", items: book.moods, tagColor: .yellow)
                 Divider()
                 
-                BooksByAuthorView(books: [.example, .example2])
+                BookTagSection(title: "CONTENT WARNINGS", items: book.contentWarnings, tagColor: .red)
             }
         }
         .navigationTitle(book.title ?? "")
@@ -136,12 +131,10 @@ private struct BookRatingView: View {
             }
         }
         .padding(.horizontal)
-        .onAppear {
-            Task {
-                if let userBookState = await viewModel.fetchUserBookState(bookId: book.id) {
-                    selectedShelf = userBookState.shelf
-                    selectedRating = userBookState.rating
-                }
+        .task {
+            if let userBookState = await viewModel.fetchUserBookState(bookId: book.id) {
+                selectedShelf = userBookState.shelf
+                selectedRating = userBookState.rating
             }
         }
         .onChange(of: viewModel.state) {
@@ -177,12 +170,14 @@ private struct BookDescriptionView: View {
     }
 }
 
-private struct BookGenresView: View {
+private struct BookTagSection: View {
     
-    let genres: [String]?
+    let title: String
+    let items: [String]?
+    let tagColor: Color
     
     var body: some View {
-        Text("GENRES")
+        Text(title)
             .font(.subheadline)
             .bold()
             .overlay(
@@ -192,71 +187,24 @@ private struct BookGenresView: View {
                 alignment: .bottom
             )
         
-        if let genres = genres {
+        if let elements = items {
             let columns = [GridItem(.adaptive(minimum: 80))]
             
             LazyVGrid(columns: columns, spacing: 6) {
-                ForEach(genres, id: \.self) { genre in
-                    Text(genre)
+                ForEach(elements, id: \.self) { item in
+                    Text(item)
                         .font(.caption)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .background(.green.opacity(0.2))
+                        .background(tagColor.opacity(0.2))
                         .clipShape(Capsule())
                 }
             }
         } else {
-            Text("Genres unknown")
+            Text("No data")
         }
     }
 }
-
-private struct BookSeriesView: View {
-    
-    let featuredBooks: [Book]
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 16) {
-                ForEach(featuredBooks) { book in
-                    VStack {
-                        BookImageView(url: book.image?.url)
-                            .frame(height: 60)
-                        
-                        Text(book.title ?? "Unknown title")
-                            .bold()
-                            .font(.footnote)
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-    }
-}
-
-private struct BooksByAuthorView: View {
-    
-    let books: [Book]
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 18) {
-                ForEach(books) { book in
-                    VStack {
-                        BookImageView(url: book.image?.url)
-                            .frame(height: 60)
-                        
-                        Text(book.title ?? "Unknown title")
-                            .bold()
-                            .font(.footnote)
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-    }
-}
-
 
 #Preview {
     NavigationStack {
