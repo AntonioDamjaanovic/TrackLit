@@ -13,28 +13,7 @@ struct MyBooksScreen: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                Text("Reading:")
-                    .font(.title3.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 16)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack {
-                        ForEach(viewModel.currentlyReading) { book in
-                            NavigationLink(value: book) {
-                                CurrentlyReadingView(book: book, viewModel: viewModel)
-                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 12)
-                            }
-                            .tint(.primary)
-                        }
-                    }
-                    .scrollTargetLayout()
-                }
-                .scrollTargetBehavior(.viewAligned)
-                .contentMargins(.horizontal, 16)
-                .frame(height: 160)
-            }
+            BookCarouselView(viewModel: viewModel)
             
             List {
                 ForEach(ShelfState.allCases, id: \.self) { shelf in
@@ -64,6 +43,66 @@ struct MyBooksScreen: View {
                 await viewModel.fetchUserBooks()
             }
         }
+    }
+}
+
+private struct BookCarouselView: View {
+
+    let viewModel: MyBooksViewModel
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Reading:")
+                .font(.title3.bold())
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 16)
+
+            if viewModel.currentlyReading.isEmpty {
+                emptyState
+            } else {
+                carousel
+            }
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "book.closed")
+                .font(.system(size: 32))
+                .foregroundStyle(.secondary)
+
+            Text("No books in progress")
+                .font(.headline)
+
+            Text("Add a book to your Currently Reading shelf to start tracking your progress.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+        .padding(.horizontal, 16)
+        .background(Color(.secondarySystemBackground),
+                    in: RoundedRectangle(cornerRadius: 16))
+        .padding(.horizontal, 16)
+    }
+
+    private var carousel: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack {
+                ForEach(viewModel.currentlyReading) { book in
+                    NavigationLink(value: book) {
+                        CurrentlyReadingView(book: book, viewModel: viewModel)
+                            .containerRelativeFrame(.horizontal, count: 1, spacing: 12)
+                    }
+                    .tint(.primary)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .contentMargins(.horizontal, 16)
+        .frame(height: 160)
     }
 }
 
