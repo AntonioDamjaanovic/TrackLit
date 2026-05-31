@@ -17,13 +17,9 @@ class BookDetailViewModel {
     var state: LoadingState<ShelfState> = .idle
     
     private let db = Firestore.firestore()
-    private var shelfTask: Task<Void, Never>?
-    private var ratingTask: Task<Void, Never>?
     
     func fetchUserBookState(bookId: String) async -> (shelf: ShelfState, rating: Int)? {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return nil
-        }
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
         
         self.state = .loading
         
@@ -49,61 +45,45 @@ class BookDetailViewModel {
         }
     }
     
-    func saveToShelf(to shelf: ShelfState, book: Book, rating: Int) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
+    func saveToShelf(to shelf: ShelfState, book: Book, rating: Int = 0, onPage: Int = 0) async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        shelfTask?.cancel()
-        
-        shelfTask = Task {
-            do {
-                self.state = .loading
+        do {
+            self.state = .loading
 
-                let bookRef = db.collection("users")
-                    .document(uid)
-                    .collection("books")
-                    .document(book.id)
-                
-                if shelf == .notOnShelf {
-                    try await bookRef.delete()
-                } else {
-                    let updatedBook = book.with(userRating: rating, shelf: shelf)
-                    try await bookRef.setData(updatedBook.asDictionary())
-                }
-                
-                self.state = .loaded(shelf)
-                print("Save succesfull")
-            } catch is CancellationError {
-                // intentionally cancelled, do nothing
-            } catch {
-                self.state = .error(error.localizedDescription)
-                print("Save failed: \(error.localizedDescription)")
+            let bookRef = db.collection("users")
+                .document(uid)
+                .collection("books")
+                .document(book.id)
+            
+            if shelf == .notOnShelf {
+                try await bookRef.delete()
+            } else {
+                let updatedBook = book.with(userRating: rating, shelf: shelf, onPage: onPage)
+                try await bookRef.setData(updatedBook.asDictionary())
             }
+            
+            self.state = .loaded(shelf)
+            print("Save succesfull")
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Save failed: \(error.localizedDescription)")
         }
     }
     
-    func updateBookRating(bookId: String, rating: Int) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
+    func updateBookRating(bookId: String, rating: Int) async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        ratingTask?.cancel()
-        
-        ratingTask = Task {
-            do {
-                try await db.collection("users")
-                    .document(uid)
-                    .collection("books")
-                    .document(bookId)
-                    .updateData(["userRating": rating])
-                
-            } catch is CancellationError {
-                // intentionally cancelled, do nothing
-            } catch {
-                self.state = .error(error.localizedDescription)
-                print("Update failed: \(error.localizedDescription)")
-            }
+        do {
+            try await db.collection("users")
+                .document(uid)
+                .collection("books")
+                .document(bookId)
+                .updateData(["userRating": rating])
+            
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Update failed: \(error.localizedDescription)")
         }
     }
 }

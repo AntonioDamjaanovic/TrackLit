@@ -22,6 +22,25 @@ class MyBooksViewModel {
     
     private let db = Firestore.firestore()
     
+    func updateBookProgress(bookId: String, onPage: Int) async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        self.state = .loading
+        
+        do {
+            try await db.collection("users")
+               .document(uid)
+               .collection("books")
+               .document(bookId)
+               .updateData(["onPage": onPage])
+            
+            await fetchUserBooks()
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+    }
+    
     func fetchUserBooks() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
@@ -61,5 +80,14 @@ class MyBooksViewModel {
             case .didNotFinish: return didNotFinish
             case .notOnShelf: return []
         }
+    }
+    
+    static var example: MyBooksViewModel {
+        let vm = MyBooksViewModel()
+        vm.currentlyReading = [.example, .example2]
+        vm.read = [.example, .example2]
+        vm.wantToRead = [.example, .example2]
+        vm.didNotFinish = [.example, .example2]
+        return vm
     }
 }

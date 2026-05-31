@@ -9,17 +9,40 @@ import SwiftUI
 
 struct MyBooksScreen: View {
     
-    let myBooksViewModel: MyBooksViewModel
+    let viewModel: MyBooksViewModel
     
     var body: some View {
         NavigationStack {
+            VStack(alignment: .leading) {
+                Text("Reading:")
+                    .font(.title3.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 16)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack {
+                        ForEach(viewModel.currentlyReading) { book in
+                            NavigationLink(value: book) {
+                                CurrentlyReadingView(book: book, viewModel: viewModel)
+                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 12)
+                            }
+                            .tint(.primary)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .contentMargins(.horizontal, 16)
+                .frame(height: 160)
+            }
+            
             List {
                 ForEach(ShelfState.allCases, id: \.self) { shelf in
-                    if shelf != .notOnShelf {
+                    if shelf != .notOnShelf && shelf != .currentlyReading {
                         Section {
                             NavigationLink(value: ShelfDestination.shelf(shelf)) {
                                 ShelfView(
-                                    books: myBooksViewModel.books(for: shelf),
+                                    books: viewModel.books(for: shelf),
                                     title: shelf.displayName
                                 )
                             }
@@ -29,7 +52,7 @@ struct MyBooksScreen: View {
             }
             .navigationDestination(for: ShelfDestination.self) { destination in
                 if case .shelf(let shelf) = destination {
-                    ShelfBooksListView(viewModel: myBooksViewModel, shelf: shelf)
+                    ShelfBooksListView(viewModel: viewModel, shelf: shelf)
                 }
             }
             .navigationDestination(for: Book.self) { book in
@@ -38,7 +61,7 @@ struct MyBooksScreen: View {
             .navigationTitle("My Books")
             .listSectionSpacing(14)
             .task {
-                await myBooksViewModel.fetchUserBooks()
+                await viewModel.fetchUserBooks()
             }
         }
     }
@@ -86,7 +109,7 @@ private enum ShelfDestination: Hashable {
 }
 
 #Preview("My Books Screen") {
-    MyBooksScreen(myBooksViewModel: MyBooksViewModel())
+    MyBooksScreen(viewModel: .example)
 }
 
 #Preview("Shelf View") {

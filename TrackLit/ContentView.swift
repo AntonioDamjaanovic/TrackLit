@@ -23,7 +23,7 @@ struct ContentView: View {
     private var appView: some View {
         TabView {
             Tab("My Books", systemImage: "books.vertical.fill") {
-                MyBooksScreen(myBooksViewModel: myBooksViewModel)
+                MyBooksScreen(viewModel: myBooksViewModel)
             }
             
             Tab("Stats", systemImage: "apple.books.pages.fill") {

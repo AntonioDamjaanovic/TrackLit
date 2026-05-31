@@ -99,7 +99,9 @@ private struct BookRatingView: View {
                     set: { newShelf in
                         selectedShelf = newShelf
                         if newShelf == .notOnShelf { selectedRating = 0 }
-                        viewModel.saveToShelf(to: newShelf, book: book, rating: selectedRating)
+                        Task {
+                            await viewModel.saveToShelf(to: newShelf, book: book, rating: selectedRating)
+                        }
                     }
                 )) {
                     ForEach(ShelfState.allCases) { shelf in
@@ -124,7 +126,9 @@ private struct BookRatingView: View {
                     get: { selectedRating },
                     set: { newRating in
                         selectedRating = newRating
-                        viewModel.updateBookRating(bookId: book.id, rating: newRating)
+                        Task {
+                            await viewModel.updateBookRating(bookId: book.id, rating: newRating)
+                        }
                     }
                 ))
                 .disabled(viewModel.state == .loading || viewModel.state.data == .notOnShelf)
