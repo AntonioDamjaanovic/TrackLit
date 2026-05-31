@@ -56,7 +56,7 @@ struct MyBooksScreen: View {
                 }
             }
             .navigationDestination(for: Book.self) { book in
-                BookDetailScreen(book: book)
+                BookDetailScreen(book: book, viewModel: viewModel)
             }
             .navigationTitle("My Books")
             .listSectionSpacing(14)

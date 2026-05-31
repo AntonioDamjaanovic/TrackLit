@@ -10,7 +10,7 @@ import SwiftUI
 struct BookDetailScreen: View {
     
     let book: Book
-    @State private var viewModel = BookDetailViewModel()
+    let viewModel: MyBooksViewModel
     
     var body: some View {
         ScrollView {
@@ -80,7 +80,7 @@ private struct BookInfoView: View {
 private struct BookRatingView: View {
     
     let book: Book
-    let viewModel: BookDetailViewModel
+    let viewModel: MyBooksViewModel
     
     @State private var selectedShelf: ShelfState = .notOnShelf
     @State private var selectedRating: Int = 0
@@ -131,7 +131,7 @@ private struct BookRatingView: View {
                         }
                     }
                 ))
-                .disabled(viewModel.state == .loading || viewModel.state.data == .notOnShelf)
+                .disabled(viewModel.state == .loading || selectedShelf == .notOnShelf)
             }
         }
         .padding(.horizontal)
@@ -212,6 +212,6 @@ private struct BookTagSection: View {
 
 #Preview {
     NavigationStack {
-        BookDetailScreen(book: .example)
+        BookDetailScreen(book: .example, viewModel: .example)
     }
 }

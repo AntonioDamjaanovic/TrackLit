@@ -13,7 +13,7 @@ import FirebaseAuth
 @Observable
 class MyBooksViewModel {
     
-    var state: LoadingState<[Book]> = .idle
+    var state: LoadingState<ShelfState> = .idle
     
     var wantToRead: [Book] = []
     var read: [Book] = []
@@ -22,10 +22,29 @@ class MyBooksViewModel {
     
     private let db = Firestore.firestore()
     
-    func updateBookProgress(bookId: String, onPage: Int) async {
+    func fetchUserBooks() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        self.state = .loading
+        do {
+            let bookDocuments = try await db.collection("users")
+                .document(uid)
+                .collection("books")
+                .getDocuments()
+            
+            let books = try bookDocuments.documents.compactMap { document in
+                try document.data(as: Book.self)
+            }
+            
+            filterBooksByShelf(books: books)
+            print("Fetch succesfull")
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateBookProgress(bookId: String, onPage: Int) async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
         do {
             try await db.collection("users")
@@ -41,28 +60,81 @@ class MyBooksViewModel {
         }
     }
     
-    func fetchUserBooks() async {
+    func fetchUserBookState(bookId: String) async -> (shelf: ShelfState, rating: Int)? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        
+        do {
+            let document = try await db.collection("users")
+                .document(uid)
+                .collection("books")
+                .document(bookId)
+                .getDocument()
+            
+            let rating = document.get("userRating") as? Int ?? 0
+            
+            let shelfString = document.get("shelf") as? String
+            let shelfState = ShelfState(rawValue: shelfString ?? "notOnShelf") ?? .notOnShelf
+            
+            print("Fetch succesfull")
+            return (shelf: shelfState, rating: rating)
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Fetch failed: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func saveToShelf(to shelf: ShelfState, book: Book, rating: Int = 0, onPage: Int = 0) async {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         self.state = .loading
         
         do {
-            let bookDocuments = try await db.collection("users")
+            let bookRef = db.collection("users")
                 .document(uid)
                 .collection("books")
-                .getDocuments()
+                .document(book.id)
             
-            let books = try bookDocuments.documents.compactMap { document in
-                try document.data(as: Book.self)
+            if shelf == .notOnShelf {
+                try await bookRef.delete()
+            } else {
+                let updatedBook = book.with(userRating: rating, shelf: shelf, onPage: onPage)
+                try await bookRef.setData(updatedBook.asDictionary())
             }
             
-            filterBooksByShelf(books: books)
-            self.state = .loaded(books)
-            print("Fetch succesfull")
+            await fetchUserBooks()
+            self.state = .loaded(shelf)
+            print("Save succesfull")
         } catch {
             self.state = .error(error.localizedDescription)
-            print("Fetch failed: \(error.localizedDescription)")
+            print("Save failed: \(error.localizedDescription)")
         }
+    }
+    
+    func updateBookRating(bookId: String, rating: Int) async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        do {
+            try await db.collection("users")
+                .document(uid)
+                .collection("books")
+                .document(bookId)
+                .updateData(["userRating": rating])
+            
+            await fetchUserBooks()
+            print("Save succesfull")
+        } catch {
+            self.state = .error(error.localizedDescription)
+            print("Update failed: \(error.localizedDescription)")
+        }
+    }
+    
+    func finishBook(book: Book, rating: Int) async {
+        guard let total = book.pages else { return }
+        
+        await updateBookProgress(bookId: book.id, onPage: total)
+        await saveToShelf(to: .read, book: book, onPage: total)
+        await updateBookRating(bookId: book.id, rating: rating)
     }
     
     private func filterBooksByShelf(books: [Book]) {

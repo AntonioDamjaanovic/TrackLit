@@ -39,7 +39,7 @@ struct SearchScreen: View {
                 }
             }
             .navigationDestination(for: Book.self) { book in
-                BookDetailScreen(book: book)
+                BookDetailScreen(book: book, viewModel: myBooksViewModel)
             }
             .navigationTitle("Search Books")
             .searchable(text: $text)

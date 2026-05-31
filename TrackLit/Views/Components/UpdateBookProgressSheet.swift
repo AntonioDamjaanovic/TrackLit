@@ -15,7 +15,6 @@ struct UpdateBookProgressSheet: View {
     
     @State private var onPage: Int?
     @State private var showingRatingSheet = false
-    @State private var detailViewModel = BookDetailViewModel()
     
     var body: some View {
         NavigationStack {
@@ -54,7 +53,8 @@ struct UpdateBookProgressSheet: View {
             .sheet(isPresented: $showingRatingSheet) {
                 FinishBookRatingSheet(book: book) { rating in
                     Task {
-                        await finishBook(rating: rating)
+                        await viewModel.finishBook(book: book, rating: rating)
+                        showingRatingSheet = false
                     }
                 }
                 .presentationDetents([.medium])
@@ -86,14 +86,6 @@ struct UpdateBookProgressSheet: View {
                 }
             }
         }
-    }
-    
-    private func finishBook(rating: Int) async {
-        guard let total = book.pages else { return }
-        await viewModel.updateBookProgress(bookId: book.id, onPage: total)
-        await detailViewModel.saveToShelf(to: .read, book: book, onPage: total)
-        await detailViewModel.updateBookRating(bookId: book.id, rating: rating)
-        showingProgressSheet = false
     }
 }
 
