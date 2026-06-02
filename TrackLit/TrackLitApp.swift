@@ -14,6 +14,9 @@ struct TrackLitApp: App {
     
     init() {
         FirebaseApp.configure()
+        UserDefaults.standard.register(defaults: [
+            UserDefaultsKeys.notificationsEnabled: true
+        ])
     }
     
     var body: some Scene {

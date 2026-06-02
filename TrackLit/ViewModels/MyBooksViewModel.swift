@@ -135,6 +135,11 @@ class MyBooksViewModel {
         await updateBookProgress(bookId: book.id, onPage: total)
         await saveToShelf(to: .read, book: book, onPage: total)
         await updateBookRating(bookId: book.id, rating: rating)
+        
+        let permission = await NotificationService.shared.requestPermission()
+        if permission {
+            await NotificationService.shared.sendBookFinishedNotification(bookTitle: book.title ?? "your book")
+        }
     }
     
     private func filterBooksByShelf(books: [Book]) {
