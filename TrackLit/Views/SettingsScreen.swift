@@ -10,17 +10,19 @@ import SwiftUI
 struct SettingsScreen: View {
     
     @State private var viewModel = SettingsViewModel()
-    
+    @State private var showCamera = false
+
     @AppStorage(UserDefaultsKeys.appearanceTheme)
     private var appearanceTheme: AppearanceTheme = .system
-    
+
     @AppStorage(UserDefaultsKeys.notificationsEnabled)
     private var notificationsEnabled: Bool = true
-    
+
     var body: some View {
         NavigationStack {
             Form {
                 Section("Account") {
+                    avatarRow
                     accountContent
                 }
                 
@@ -55,11 +57,47 @@ struct SettingsScreen: View {
             }
             .navigationTitle("Settings")
             .task {
+                viewModel.loadProfileImage()
                 await viewModel.fetchUserData()
+            }
+            .fullScreenCover(isPresented: $showCamera) {
+                CameraPicker { image in
+                    viewModel.saveProfileImage(image)
+                }
+                .ignoresSafeArea()
             }
         }
     }
-    
+
+    @ViewBuilder
+    private var avatarRow: some View {
+        HStack {
+            Spacer()
+            Button {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    showCamera = true
+                }
+            } label: {
+                Group {
+                    if let image = viewModel.profileImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Image(systemName: "person.crop.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .frame(width: 96, height: 96)
+                .clipShape(Circle())
+            }
+            .buttonStyle(.plain)
+            Spacer()
+        }
+    }
+
     @ViewBuilder
     private var accountContent: some View {
         switch viewModel.state {
