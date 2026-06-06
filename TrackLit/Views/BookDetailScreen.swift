@@ -57,7 +57,7 @@ private struct BookInfoView: View {
                 Text("by \(author)")
             }
             
-            HStack(spacing: 16) {
+            HStack(spacing: 20) {
                 if let rating = book.rating {
                     StarRatingView(rating: rating)
                     
@@ -66,10 +66,6 @@ private struct BookInfoView: View {
                 
                 if let ratingsCount = book.ratingsCount {
                     Text("\(ratingsCount) ratings")
-                }
-                
-                if let reviewsCount = book.reviewsCount {
-                    Text("\(reviewsCount) reviews")
                 }
             }
             .font(.caption)

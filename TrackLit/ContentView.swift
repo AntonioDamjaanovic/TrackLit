@@ -27,7 +27,7 @@ struct ContentView: View {
             }
             
             Tab("Stats", systemImage: "apple.books.pages.fill") {
-                
+                StatsScreen()
             }
             
             Tab("Settings", systemImage: "gear") {

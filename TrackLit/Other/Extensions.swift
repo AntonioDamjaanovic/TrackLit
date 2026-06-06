@@ -83,7 +83,6 @@ extension Book {
             moods: moods,
             rating: rating,
             ratingsCount: ratingsCount,
-            reviewsCount: reviewsCount,
             usersRead: usersRead,
             userRating: userRating,
             shelf: shelf,
