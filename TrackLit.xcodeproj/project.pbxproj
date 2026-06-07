@@ -39,6 +39,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		A937D7192FD5ABF500A319D0 /* screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = screenshots;
+			sourceTree = "<group>";
+		};
 		A945BC6C2F94E4CE0093B1CB /* TrackLit */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TrackLit;
@@ -86,6 +91,7 @@
 		A945BC612F94E4CE0093B1CB = {
 			isa = PBXGroup;
 			children = (
+				A937D7192FD5ABF500A319D0 /* screenshots */,
 				A945BCE82F94EAA80093B1CB /* README.md */,
 				A945BCE22F94E82B0093B1CB /* .gitignore */,
 				A945BC6C2F94E4CE0093B1CB /* TrackLit */,
@@ -121,6 +127,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				A937D7192FD5ABF500A319D0 /* screenshots */,
 				A945BC6C2F94E4CE0093B1CB /* TrackLit */,
 			);
 			name = TrackLit;

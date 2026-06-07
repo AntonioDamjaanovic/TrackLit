@@ -81,12 +81,12 @@ private struct ReadingStatsView: View {
             .padding(.horizontal)
             .padding(.bottom)
             
-            if !readingStats.genreCounts.isEmpty {
-                GenreChartView(genreCounts: readingStats.genreCounts)
-            }
-
             if !readingStats.monthlyReadCounts.isEmpty {
                 MonthlyReadChartView(monthlyReadCounts: readingStats.monthlyReadCounts)
+            }
+            
+            if !readingStats.genreCounts.isEmpty {
+                GenreChartView(genreCounts: readingStats.genreCounts)
             }
         }
     }
