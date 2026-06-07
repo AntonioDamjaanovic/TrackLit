@@ -8,16 +8,16 @@ Search the Hardcover catalog, drop books on shelves, log progress as you read, a
 ## 📸 Screenshots
 
 <p float="left">
-  <img src="screenshots/login.jpg" width="250" height="500"/>
-  <img src="screenshots/register.jpg" width="250" height="500"/>
-  <img src="screenshots/my_books.jpg" width="250" height="500"/>
-  <img src="screenshots/shelf.jpg" width="250" height="500"/>
+  <img src="screenshots/login.jpg" width="200" height="500"/>
+  <img src="screenshots/register.jpg" width="200" height="500"/>
+  <img src="screenshots/my_books.jpg" width="200" height="500"/>
+  <img src="screenshots/shelf.jpg" width="200" height="500"/>
 </p>
 <p float="left">
-  <img src="screenshots/book_detail.jpg" width="250" height="500"/>
-  <img src="screenshots/stats.jpg" width="250" height="500"/>
-  <img src="screenshots/settings.jpg" width="250" height="500"/>
-  <img src="screenshots/search.jpg" width="250" height="500"/>
+  <img src="screenshots/book_detail.jpg" width="200" height="500"/>
+  <img src="screenshots/stats.jpg" width="200" height="500"/>
+  <img src="screenshots/settings.jpg" width="200" height="500"/>
+  <img src="screenshots/search.jpg" width="200" height="500"/>
 </p>
 
 ---
