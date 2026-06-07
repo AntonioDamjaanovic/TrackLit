@@ -51,8 +51,6 @@ Search the Hardcover catalog, drop books on shelves, log progress as you read, a
 - **Cloud Firestore** – Codable round‑trip via `setData(from:)` / `data(as:)`
 - **URLSession** – GraphQL POST requests to the Hardcover API
 - **UserNotifications** – Local notifications when a book is finished
-- **UIImagePickerController** – Bridged to SwiftUI for camera capture
-- **AsyncImage** – Remote cover loading
 
 API [documentation](https://docs.hardcover.app/) for Hardcover:
 - base URL: `https://api.hardcover.app/v1/graphql`
@@ -67,26 +65,3 @@ API [documentation](https://docs.hardcover.app/) for Hardcover:
 - **Domain/Data Separation** – Plain Codable model types (`Book`, `Author`, `RemoteImage`, `ReadingStats`, `MonthlyReadCount`, …) kept apart from networking and UI
 - **Reactive UI** – `Observation` tracking automatically re‑renders only the views that read changed properties
 - **Persistence** – Per‑user Firestore subcollection at `users/{uid}/books/{bookId}` plus `@AppStorage` for preferences
-
----
-
-## 🖥️ Main Screens & Workflow
-- **Login / Register** – Validated email & password flow with friendly error mapping
-- **My Books Screen** – Horizontal carousel of in‑progress reads + grouped shelves below
-- **Shelf Screen** - List of books for a specific shelf
-- **Search Screen** – `.searchable` + `.task(id:)` debounce against the Hardcover API
-- **Book Detail Screen** – Cover, info, shelf picker, star rating, description, genres, moods, content warnings
-- **Stats Screen** – Stat cards, reading level, top genres chart, books read by month chart
-- **Settings Screen** – Profile, appearance, notifications toggle, reset defaults, sign out
-
----
-
-## 💡 User Actions
-- **Sign In / Sign Up** – Authenticate with Firebase, session preserved automatically
-- **Search** – Live Hardcover catalog search as you type
-- **Shelf** – Drop a book on any shelf; Firestore updates immediately
-- **Update Progress** – Set the current page or mark finished from the carousel
-- **Rate** – Star rating from the detail screen or finish sheet
-- **Finish** – Stamps `finishedAt`, sends a local notification, feeds the monthly chart
-- **Profile Photo** – Take a new picture with the camera anytime
-- **Sign Out** – From settings, returning you to the login screen
