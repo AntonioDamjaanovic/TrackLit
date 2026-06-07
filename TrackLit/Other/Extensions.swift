@@ -69,7 +69,7 @@ extension Encodable {
 }
 
 extension Book {
-    func with(userRating: Int, shelf: ShelfState, onPage: Int) -> Book {
+    func with(userRating: Int, shelf: ShelfState, onPage: Int, finishedAt: Date?) -> Book {
         return Book(
             id: id,
             title: title,
@@ -86,7 +86,8 @@ extension Book {
             usersRead: usersRead,
             userRating: userRating,
             shelf: shelf,
-            onPage: onPage
+            onPage: onPage,
+            finishedAt: finishedAt
         )
     }
 }

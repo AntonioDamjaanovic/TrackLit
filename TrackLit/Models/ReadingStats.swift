@@ -12,4 +12,5 @@ struct ReadingStats: Equatable {
     let pagesRead: Int
     let averageRating: Double
     let genreCounts: [GenreCount]
+    let monthlyReadCounts: [MonthlyReadCount]
 }

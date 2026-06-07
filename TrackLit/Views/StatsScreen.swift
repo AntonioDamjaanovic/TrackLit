@@ -9,8 +9,7 @@ import SwiftUI
 
 struct StatsScreen: View {
     
-    // TODO: change this
-    @State private var viewModel = StatsViewModel.example
+    @State private var viewModel = StatsViewModel()
     
     var body: some View {
         NavigationStack {
@@ -81,8 +80,14 @@ private struct ReadingStatsView: View {
             }
             .padding(.horizontal)
             .padding(.bottom)
-        
-            GenreChartView(genreCounts: readingStats.genreCounts)
+            
+            if !readingStats.genreCounts.isEmpty {
+                GenreChartView(genreCounts: readingStats.genreCounts)
+            }
+
+            if !readingStats.monthlyReadCounts.isEmpty {
+                MonthlyReadChartView(monthlyReadCounts: readingStats.monthlyReadCounts)
+            }
         }
     }
 }

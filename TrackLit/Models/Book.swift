@@ -24,9 +24,10 @@ struct Book: Codable, Identifiable, Equatable, Hashable {
     let userRating: Int?
     let shelf: ShelfState?
     let onPage: Int?
+    let finishedAt: Date?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, contributions, pages, description, genres, image, rating, moods, userRating, shelf, onPage
+        case id, title, contributions, pages, description, genres, image, rating, moods, userRating, shelf, onPage, finishedAt
         
         case releaseYear = "release_year"
         case contentWarnings = "content_warnings"
@@ -43,7 +44,7 @@ struct Book: Codable, Identifiable, Equatable, Hashable {
         let contentWarnings = ["Violence", "Death", "Death of parent", "War"]
         let moods = ["Adventurous", "challenging", "mysterious", "tense", "dark"]
         
-        return Book(id: "312460", title: "Dune", description: description, contributions: contributions, genres: genres, releaseYear: 1965, image: image, pages: 704, contentWarnings: contentWarnings, moods: moods, rating: 4.31598440545809, ratingsCount: 5130, usersRead: 6994, userRating: 0, shelf: .notOnShelf, onPage: 127)
+        return Book(id: "312460", title: "Dune", description: description, contributions: contributions, genres: genres, releaseYear: 1965, image: image, pages: 704, contentWarnings: contentWarnings, moods: moods, rating: 4.31598440545809, ratingsCount: 5130, usersRead: 6994, userRating: 0, shelf: .notOnShelf, onPage: 127, finishedAt: nil)
     }
     
     static var example2: Book {
@@ -55,7 +56,7 @@ struct Book: Codable, Identifiable, Equatable, Hashable {
         let contentWarnings = ["Violence", "Death", "War", "Political intrigue"]
         let moods = ["Dark", "mysterious", "tense", "philosophical", "melancholic"]
         
-        return Book(id: "312461", title: "Dune Messiah", description: description, contributions: contributions, genres: genres, releaseYear: 1969, image: image, pages: 226, contentWarnings: contentWarnings, moods: moods, rating: 3.98, ratingsCount: 3200, usersRead: 4500, userRating: 0, shelf: .notOnShelf, onPage: 0)
+        return Book(id: "312461", title: "Dune Messiah", description: description, contributions: contributions, genres: genres, releaseYear: 1969, image: image, pages: 226, contentWarnings: contentWarnings, moods: moods, rating: 3.98, ratingsCount: 3200, usersRead: 4500, userRating: 0, shelf: .notOnShelf, onPage: 0, finishedAt: nil)
     }
 }
 

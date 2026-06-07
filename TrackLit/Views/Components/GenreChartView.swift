@@ -13,7 +13,7 @@ struct GenreChartView: View {
     let genreCounts: [GenreCount]
     
     private var topGenres: [GenreCount] {
-        Array(genreCounts.prefix(8))
+        Array(genreCounts.prefix(6))
     }
     
     var body: some View {

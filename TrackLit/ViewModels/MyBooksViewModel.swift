@@ -98,8 +98,17 @@ class MyBooksViewModel {
             if shelf == .notOnShelf {
                 try await bookRef.delete()
             } else {
-                let updatedBook = book.with(userRating: rating, shelf: shelf, onPage: onPage)
-                try await bookRef.setData(updatedBook.asDictionary())
+                let existingBook = try? await bookRef.getDocument().data(as: Book.self)
+                
+                let finishedAt: Date?
+                if shelf == .read {
+                    finishedAt = existingBook?.finishedAt ?? Date()
+                } else {
+                    finishedAt = nil
+                }
+                
+                let updatedBook = book.with(userRating: rating, shelf: shelf, onPage: onPage, finishedAt: finishedAt)
+                try bookRef.setData(from: updatedBook)
             }
             
             await fetchUserBooks()
