@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ReadingLevel: String {
+enum ReadingLevel: String, Codable {
     case beginner = "Beginner"
     case intermediate = "Intermediate"
     case advanced = "Advanced"
@@ -15,9 +15,9 @@ enum ReadingLevel: String {
     
     init(pagesRead: Int) {
         switch pagesRead {
-            case ..<1_000: self = .beginner
-            case ..<5_000: self = .intermediate
-            case ..<10_000: self = .advanced
+            case ..<2_500: self = .beginner
+            case ..<10_000: self = .intermediate
+            case ..<20_000: self = .advanced
             default: self = .expert
         }
     }
