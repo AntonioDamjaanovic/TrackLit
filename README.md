@@ -33,7 +33,7 @@ Search the Hardcover catalog, drop books on shelves, log progress as you read, a
 - **📅 finishedAt Stamp** – Books moved to *Read* are timestamped (and cleared if you move them off)
 - **📈 Stats Dashboard** – Books read, pages read, average rating, reading level
 - **📉 Charts** – Top genres + Books read by month (Swift Charts)
-- **🔔 Notifications** – Local push when you finish a book
+- **🔔 Notifications** – Local push when you finish a book, reach a new reading level and daily reminders to read
 - **🌗 Appearance** – System / Light / Dark theme picker stored in UserDefaults
 - **📷 Profile Photo** – Capture a profile picture straight from the camera
 - **🎨 Modern UI** – Built 100% in SwiftUI with the new Observation framework
@@ -60,7 +60,7 @@ API [documentation](https://docs.hardcover.app/) for Hardcover:
 ---
 
 ## ⚙️ Architecture
-- **MVVM Pattern** – One `@Observable` view model per screen, pure logic stays out of the views
+- **MVVM Pattern** – One `@Observable` view model per screen
 - **Service Layer** – `HardcoverService` protocol with `Default` + `Mock` implementations for previews / tests
 - **Domain/Data Separation** – Plain Codable model types (`Book`, `Author`, `RemoteImage`, `ReadingStats`, `MonthlyReadCount`, …) kept apart from networking and UI
 - **Reactive UI** – `Observation` tracking automatically re‑renders only the views that read changed properties
