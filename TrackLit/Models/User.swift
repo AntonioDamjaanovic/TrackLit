@@ -12,4 +12,5 @@ struct User: Codable, Equatable, Identifiable {
     let name: String
     let email: String
     let joined: TimeInterval
+    var readingLevel: ReadingLevel? = nil
 }

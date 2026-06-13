@@ -101,4 +101,30 @@ extension NotificationService {
             print("Failed to schedule notification: \(error)")
         }
     }
+
+    func sendReadingLevelUpNotification(level: String) async {
+        guard UserDefaults.standard.bool(forKey: UserDefaultsKeys.notificationsEnabled) else { return }
+
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        guard settings.authorizationStatus == .authorized else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "📚 Level up!"
+        content.body = "Congratulations on reaching \(level) reading level."
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+        } catch {
+            print("Failed to schedule notification: \(error)")
+        }
+    }
 }

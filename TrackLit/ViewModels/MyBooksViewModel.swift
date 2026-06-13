@@ -145,6 +145,33 @@ class MyBooksViewModel {
         await saveToShelf(to: .read, book: book, onPage: total)
         await updateBookRating(bookId: book.id, rating: rating)
         await NotificationService.shared.sendBookFinishedNotification(bookTitle: book.title ?? "your book")
+        await updateReadingLevelIfNeeded()
+    }
+
+    private func updateReadingLevelIfNeeded() async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        let pagesRead = read.reduce(0) { $0 + ($1.pages ?? 0) }
+            + currentlyReading.reduce(0) { $0 + ($1.onPage ?? 0) }
+        let newLevel = ReadingLevel(pagesRead: pagesRead)
+
+        do {
+            let userRef = db.collection("users").document(uid)
+            
+            let snapshot = try await userRef.getDocument()
+            let previousLevel = (snapshot.get("readingLevel") as? String)
+                .flatMap(ReadingLevel.init(rawValue:)) ?? .beginner
+
+            guard newLevel != previousLevel else { return }
+
+            try await userRef.updateData(["readingLevel": newLevel.rawValue])
+
+            if newLevel > previousLevel {
+                await NotificationService.shared.sendReadingLevelUpNotification(level: newLevel.rawValue)
+            }
+        } catch {
+            print("Reading level update failed: \(error.localizedDescription)")
+        }
     }
     
     private func filterBooksByShelf(books: [Book]) {
