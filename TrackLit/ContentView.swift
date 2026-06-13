@@ -13,10 +13,18 @@ struct ContentView: View {
     @State private var myBooksViewModel = MyBooksViewModel()
     
     var body: some View {
-        if mainViewModel.isSignedIn {
-            appView
-        } else {
-            LoginScreen()
+        Group {
+            if mainViewModel.isSignedIn {
+                appView
+            } else {
+                LoginScreen()
+            }
+        }
+        .task {
+            let granted = await NotificationService.shared.requestPermission()
+            if granted {
+                await NotificationService.shared.scheduleDailyReadingReminder()
+            }
         }
     }
     

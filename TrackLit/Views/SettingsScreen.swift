@@ -37,6 +37,15 @@ struct SettingsScreen: View {
                 
                 Section("Preferences") {
                     Toggle("Enable notifications", isOn: $notificationsEnabled)
+                        .onChange(of: notificationsEnabled) { _, isEnabled in
+                            Task {
+                                if isEnabled {
+                                    await NotificationService.shared.scheduleDailyReadingReminder()
+                                } else {
+                                    NotificationService.shared.cancelDailyReadingReminder()
+                                }
+                            }
+                        }
                 }
                 
                 Section {
